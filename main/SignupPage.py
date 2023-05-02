@@ -1,11 +1,42 @@
 import tkinter as tk
 
+import sqlite3
+
+import random
+
 #requirement 2
 class SignupPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+
+        ##########################################
+       #sql queries
+
+        def submit(self):
+            submit_connect = sqlite3.connect('LMS.db')
+            submit_cur = submit_connect.cursor()
+
+            full_name = f_name.get() + " " + l_name.get()
+            card_no = random.randint(100000, 999999)
+            card_str = str(card_no)
+
+            submit_cur.execute("INSERT INTO BORROWER (Card_No, Name, Address, Phone) VALUES (:card, :name, :address, :phone)",
+                            {
+                                'card': card_no,
+                                'name': full_name,
+                                'address': address.get(),
+                                'phone': phone_number.get()
+                            }    
+                            )
+            submit_connect.commit()
+            submit_connect.close()
+
+            card_output = "Your card number is " + card_str
+            card_label = tk.Label(result_frame, text = card_output)
+            card_label.grid(row=0, column=0)
+
 
         ##########################################
 
@@ -52,7 +83,7 @@ class SignupPage(tk.Frame):
 
         #frame to hold submit button
         submit_frame = tk.Frame(self)
-        sign_up = tk.Button(submit_frame, text="Sign Up")
+        sign_up = tk.Button(submit_frame, text="Sign Up", command = lambda: submit(self))
         sign_up.grid(row=5, column=0)
 
         ############################################
@@ -71,3 +102,5 @@ class SignupPage(tk.Frame):
         result_frame.grid(row=2, column=0)
         submit_frame.grid(row=3, column=0)
         menu_frame.grid(row=4,column=0)
+
+       #############################################
