@@ -58,4 +58,10 @@ class SampleApp(tk.Tk):
 
 if __name__ == "__main__":
     app = SampleApp()
+
+    app.tk.call("source", "azure.tcl")
+    app.tk.call("set_theme", "dark")
+    
     app.mainloop()
+
+    
