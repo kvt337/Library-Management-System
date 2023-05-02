@@ -1,8 +1,11 @@
 
 #run code from here
 
-#import pages
+# modules
 import tkinter as tk
+import sqlite3
+
+#import pages
 from StartPage import *
 from CheckoutPage import *
 from SignupPage import *
@@ -13,8 +16,14 @@ from LatePage import *
 
 class SampleApp(tk.Tk):
 
+    # constructor
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+
+        # Connect to the database
+        # Connect to the database
+        # use self.controller.db_conn to connect in other pages
+        self.db_conn = sqlite3.connect('LMS.db')
 
         # the container is where we'll stack a bunch of frames
         # on top of each other, then the one we want visible
@@ -24,6 +33,8 @@ class SampleApp(tk.Tk):
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
+        # Set window size
+        self.geometry('350x350')
 
         self.frames = {} #define frames array
         for F in (StartPage, CheckoutPage, SignupPage, AddPage, InventoryPage, OverduePage, LatePage): #loop that goes thru frames
