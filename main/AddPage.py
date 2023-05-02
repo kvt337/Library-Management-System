@@ -9,7 +9,7 @@ class AddPage(tk.Frame):
         self.controller = controller
 
         ############################################
-        #frame to hold the title
+        # frame to hold the title
         title_frame = tk.Frame(self)
 
         label = tk.Label(title_frame, text="Add a Book")
@@ -20,7 +20,7 @@ class AddPage(tk.Frame):
 
         ###########################################
 
-        #frame to hold user input
+        # frame to hold user input
         input_frame = tk.Frame(self)
 
         book_title_label = tk.Label(input_frame, text="Book Title")

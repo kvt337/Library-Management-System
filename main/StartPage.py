@@ -30,7 +30,7 @@ class StartPage(tk.Frame):
                             width=BTN_WIDTH,
                             command=lambda: controller.show_frame("AddPage"))
         
-        button4 = tk.Button(self, text="View Book Inventory",
+        button4 = tk.Button(self, text="Copies loaned",
                             width=BTN_WIDTH,
                             command=lambda: controller.show_frame("InventoryPage"))
         
