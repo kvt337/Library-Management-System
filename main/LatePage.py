@@ -136,8 +136,9 @@ class LatePage(tk.Frame):
         if(temp):
             result_text = ""
             for i in temp:
-                result_text += f"Book: {i[0]}\t Late Fee: {i[1]:.2f}\n"
+                result_text += f"Book: {i[0]}\t Late Fee: ${i[1]:.2f}\n"
             self.result_label.config(text=result_text)
         else:
             self.result_label.config(text="Book Not Found")
         conn.close()
+        
