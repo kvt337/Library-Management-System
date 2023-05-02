@@ -12,7 +12,7 @@ class SignupPage(tk.Frame):
         self.controller = controller
 
         ##########################################
-       #sql queries
+        #sql queries
 
         def submit(self):
             submit_connect = sqlite3.connect('LMS.db')
@@ -57,22 +57,22 @@ class SignupPage(tk.Frame):
         f_name_label = tk.Label(input_frame, text="First Name")
         f_name = tk.Entry(input_frame, width = 30)
         f_name_label.grid(row=1, column=0)
-        f_name.grid(row=1, column = 1);
+        f_name.grid(row=1, column = 1)
 
         l_name_label = tk.Label(input_frame, text="Last Name")
         l_name = tk.Entry(input_frame, width = 30)
         l_name_label.grid(row=2, column=0)
-        l_name.grid(row=2, column=1);
+        l_name.grid(row=2, column=1)
 
         phone_number_label = tk.Label(input_frame, text="Phone Number")
         phone_number = tk.Entry(input_frame, width = 30)
         phone_number_label.grid(row=3, column=0)
-        phone_number.grid(row=3, column=1);
+        phone_number.grid(row=3, column=1)
 
         address_label = tk.Label(input_frame, text="Address")
         address = tk.Entry(input_frame, width = 30)
         address_label.grid(row=4, column=0)
-        address.grid(row=4, column=1);
+        address.grid(row=4, column=1)
 
         ############################################
 
@@ -103,9 +103,6 @@ class SignupPage(tk.Frame):
         submit_frame.grid(row=3, column=0)
         menu_frame.grid(row=4,column=0)
 
-<<<<<<< HEAD
-       #############################################
-=======
+
        #############################################
 
->>>>>>> c487da9bded98f5149cbe4a9e5c45a3605d32932
