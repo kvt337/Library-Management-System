@@ -31,14 +31,14 @@ class LatePage(tk.Frame):
 
         #by user
         borrower_id_label = tk.Label(input_frame, text="User ID")
-        borrower = tk.Entry(input_frame, width = 15)
+        self.borrower = tk.Entry(input_frame, width = 15)
         borrower_id_label.grid(row=1, column=0)
-        borrower.grid(row=1, column = 1);
+        self.borrower.grid(row=1, column = 1);
 
         name_label = tk.Label(input_frame, text="Name")
-        name = tk.Entry(input_frame, width = 15)
+        self.name = tk.Entry(input_frame, width = 15)
         name_label.grid(row=2, column=0)
-        name.grid(row=2, column=1);
+        self.name.grid(row=2, column=1);
 
         #by book
         book_id_label = tk.Label(input_frame, text="Book ID")
@@ -66,7 +66,7 @@ class LatePage(tk.Frame):
         submit_frame = tk.Frame(self)
 
         #by user
-        search_user = tk.Button(submit_frame, text="Search")
+        search_user = tk.Button(submit_frame, text="Search", command = self.searchUser)
         search_user.grid(row=4, column=0, padx=70)
 
         #by book
@@ -91,6 +91,32 @@ class LatePage(tk.Frame):
         submit_frame.grid(row=3, column=0)
         menu_frame.grid(row=4,column=0)
 
+    def searchUser(self):
+        conn = sqlite3.connect('LMS.db')
+        cursor = conn.cursor()
+
+        uid_in = self.borrower.get()
+        name_in = self.name.get()
+
+        if uid_in and name_in:
+            cursor.execute('select Card_No, Borrower_Name, LateFeeBalance from vBookLoanInfo where Card_No = ? and Borrower_Name LIKE ?', (uid_in, '%'+name_in+'%',))
+        elif uid_in:
+            cursor.execute('select Card_No, Borrower_Name, LateFeeBalance from vBookLoanInfo where Card_No = ?', (uid_in,))
+        elif name_in:
+            cursor.execute("select Card_No, Borrower_Name, LateFeeBalance from vBookLoanInfo where Borrower_Name LIKE ?", ('%'+name_in+'%',))
+        else:
+            cursor.execute('select Card_No, Borrower_Name, LateFeeBalance from vBookLoanInfo order by LateFeeBalance desc')
+        temp = cursor.fetchall()
+        if(temp):
+            result_text = ""
+            for i in temp:
+                result_text += f"Card No.: {i[0]}\t Name: {i[1]}\t Late Fee: ${i[2]:.2f}\n"
+            self.result_label.config(text=result_text)
+        else:
+            self.result_label.config(text="User Not Found")
+        conn.close()
+
+
     def searchBook(self):
         conn = sqlite3.connect('LMS.db')
         cursor = conn.cursor()
@@ -110,7 +136,7 @@ class LatePage(tk.Frame):
         if(temp):
             result_text = ""
             for i in temp:
-                result_text += f"Book: {i[0]}\tLate Fee: {i[1]:.2f}\n"
+                result_text += f"Book: {i[0]}\t Late Fee: {i[1]:.2f}\n"
             self.result_label.config(text=result_text)
         else:
             self.result_label.config(text="Book Not Found")
