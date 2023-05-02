@@ -103,4 +103,9 @@ class SignupPage(tk.Frame):
         submit_frame.grid(row=3, column=0)
         menu_frame.grid(row=4,column=0)
 
+<<<<<<< HEAD
        #############################################
+=======
+       #############################################
+
+>>>>>>> c487da9bded98f5149cbe4a9e5c45a3605d32932
