@@ -1,4 +1,5 @@
 import tkinter as tk
+import sqlite3
 
 #requirement 6
 class LatePage(tk.Frame):
@@ -41,20 +42,23 @@ class LatePage(tk.Frame):
 
         #by book
         book_id_label = tk.Label(input_frame, text="Book ID")
-        book_id = tk.Entry(input_frame, width = 15)
+        self.book_id = tk.Entry(input_frame, width = 15)
         book_id_label.grid(row=1, column=2)
-        book_id.grid(row=1, column = 3);
+        self.book_id.grid(row=1, column = 3);
 
-        title_label = tk.Label(input_frame, text="Author")
-        title = tk.Entry(input_frame, width = 15)
+        title_label = tk.Label(input_frame, text="Title")
+        self.title = tk.Entry(input_frame, width = 15)
         title_label.grid(row=2, column=2)
-        title.grid(row=2, column=3);
+        self.title.grid(row=2, column=3);
 
 
         ############################################
 
         #frame to hold query output
         result_frame = tk.Frame(self)
+        self.result_label = tk.Label(result_frame, text="")
+        self.result_label.grid(row=0, column=0)
+
 
         ############################################
 
@@ -66,7 +70,7 @@ class LatePage(tk.Frame):
         search_user.grid(row=4, column=0, padx=70)
 
         #by book
-        search_book = tk.Button(submit_frame, text="Search")
+        search_book = tk.Button(submit_frame, text="Search", command = self.searchBook)
         search_book.grid(row=4, column=1, padx=30)
 
         ############################################
@@ -86,3 +90,28 @@ class LatePage(tk.Frame):
         result_frame.grid(row=2, column=0)
         submit_frame.grid(row=3, column=0)
         menu_frame.grid(row=4,column=0)
+
+    def searchBook(self):
+        conn = sqlite3.connect('LMS.db')
+        cursor = conn.cursor()
+
+        bid_in = self.book_id.get()
+        title_in = self.title.get()
+
+        if bid_in and title_in:
+            cursor.execute('select Book_Title, LateFeeBalance from vBookLoanInfo vbli join Book b on b.Title = vbli.Book_Title where Book_Id = ? and Book_Title LIKE ?', (bid_in, '%'+title_in+'%',))
+        elif bid_in:
+            cursor.execute('select Book_Title, LateFeeBalance from vBookLoanInfo vbli join Book b on b.Title = vbli.Book_Title where Book_Id = ?', (bid_in,))
+        elif title_in:
+            cursor.execute("select Book_Title, LateFeeBalance from vBookLoanInfo where Book_Title LIKE ?", ('%'+title_in+'%',))
+        else:
+            cursor.execute('select Book_Title, LateFeeBalance from vBookLoanInfo order by LateFeeBalance desc')
+        temp = cursor.fetchall()
+        if(temp):
+            result_text = ""
+            for i in temp:
+                result_text += f"Book: {i[0]}\tLate Fee: {i[1]:.2f}\n"
+            self.result_label.config(text=result_text)
+        else:
+            self.result_label.config(text="Book Not Found")
+        conn.close()
