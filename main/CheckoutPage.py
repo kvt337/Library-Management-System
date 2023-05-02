@@ -67,11 +67,6 @@ class CheckoutPage(tk.Frame):
         branch_input = int(self.branch.get())
         card_no_input = int(self.card_no.get())
 
-        """print(book_title_input)
-        print(author_input)
-        print(branch_input)
-        print(card_no_input)"""
-
         # connect to the database
         conn = sqlite3.connect('LMS.db')
         cursor = conn.cursor()
@@ -82,6 +77,13 @@ class CheckoutPage(tk.Frame):
 
         if book_id is None:
             self.result_label.config(text="Book not found")
+            return
+        
+        # Check if the book has already been checked out by the borrower
+        cursor.execute('SELECT Book_Id FROM BOOK_LOANS WHERE Book_Id = ? AND Card_No = ?', (book_id[0], card_no_input))
+        existing_loan = cursor.fetchone()
+        if existing_loan is not None:
+            self.result_label.config(text="Book already checked out by the borrower")
             return
 
         # Find the number of copies at the branch
@@ -106,7 +108,8 @@ class CheckoutPage(tk.Frame):
 
         # Update the number of copies in BOOK_COPIES
         updated_copies = copies[0] - 1
-        cursor.execute('UPDATE BOOK_COPIES SET No_Of_Copies = ? WHERE Book_Id = ? AND Branch_Id = ?)', (int(updated_copies), int(book_id[0]), int(branch_input)))
+        cursor.execute('UPDATE BOOK_COPIES SET No_Of_Copies = ? WHERE Book_Id = ? AND Branch_Id = ?', (int(updated_copies), int(book_id[0]), int(branch_input)))
+
 
         # commit changes and close the connection
         conn.commit()
