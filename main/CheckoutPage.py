@@ -18,22 +18,25 @@ class CheckoutPage(tk.Frame):
         # User input
         input_frame = tk.Frame(self)
 
+        # book title input
         book_title_label = tk.Label(input_frame, text="Book Title")
         self.book_title = tk.Entry(input_frame, width=30)
         book_title_label.grid(row=1, column=0)
         self.book_title.grid(row=1, column=1)
 
+        # Author input
         author_label = tk.Label(input_frame, text="Author")
         self.author = tk.Entry(input_frame, width=30)
         author_label.grid(row=2, column=0)
         self.author.grid(row=2, column=1)
-
+        
+        # Branch input
         branch_label = tk.Label(input_frame, text="Branch")
         self.branch = tk.Entry(input_frame, width=30)
         branch_label.grid(row=3, column=0)
         self.branch.grid(row=3, column=1)
 
-        # Add the Card_No input field
+        # Card_No input
         card_no_label = tk.Label(input_frame, text="Card No")
         self.card_no = tk.Entry(input_frame, width=30)
         card_no_label.grid(row=4, column=0)
@@ -71,7 +74,7 @@ class CheckoutPage(tk.Frame):
         conn = sqlite3.connect('LMS.db')
         cursor = conn.cursor()
 
-        # Find the book_id based on the title and author
+        # Find book id
         cursor.execute('SELECT Book_Id FROM BOOK WHERE Title = ? AND Book_Id IN (SELECT Book_Id FROM BOOK_AUTHORS WHERE Author_Name = ?)', (book_title_input, author_input))
         book_id = cursor.fetchone()
 
@@ -94,15 +97,9 @@ class CheckoutPage(tk.Frame):
             self.result_label.config(text="No copies available at this branch")
             return
         
-        # Add a new loan to BOOK_LOANS
+        # Add a new loan
         date_out = datetime.date.today()
         due_date = date_out + datetime.timedelta(days=14)
-
-        print(book_id[0])
-        print(branch_input)
-        print(card_no_input) 
-        print(date_out)
-        print(due_date)
 
         cursor.execute('INSERT INTO BOOK_LOANS (Book_Id, Branch_Id, Card_No, Date_Out, Due_Date) VALUES (?, ?, ?, ?, ?)', (int(book_id[0]), int(branch_input), int(card_no_input), date_out, due_date))
 
@@ -115,7 +112,10 @@ class CheckoutPage(tk.Frame):
         conn.commit()
         conn.close()
 
+        # success message
         self.result_label.config(text="Book checked out successfully. Updated number of copies: {}".format(updated_copies))
+
+        # clean
         self.book_title.delete(0, 'end')
         self.author.delete(0, 'end')
         self.branch.delete(0, 'end')
